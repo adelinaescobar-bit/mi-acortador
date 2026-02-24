@@ -6,8 +6,6 @@ import random
 
 app = FastAPI()
 
-# Configuración de la base de datos
-
 
 def init_db():
     conn = sqlite3.connect("links.db")
@@ -30,7 +28,7 @@ def generate_short_id(length=5):
 
 @app.get("/")
 def home():
-    return {"mensaje": "Acortador de URLs activo. Usa /crear?url=TU_URL"}
+    return {"mensaje": "Acortador activo. Usa /crear?url=TU_URL"}
 
 
 @app.get("/crear")
@@ -52,7 +50,6 @@ def redirect_to_url(short_id: str):
     cursor.execute("SELECT long_url FROM urls WHERE short_id = ?", (short_id,))
     result = cursor.fetchone()
     conn.close()
-
     if result:
         return RedirectResponse(url=result[0])
-    raise HTTPException(status_code=404, detail="Link no encontrado")
+    raise HTTPException(status_code=404, detail="No encontrado")
